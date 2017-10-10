@@ -1,0 +1,339 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:ui="clr-namespace:GitHub.UI">
+
+    <SolidColorBrush x:Key="ScrollBarDisabledBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="ScrollBarHoverBackground" Color="#EEEEEE" />
+
+    <QuinticEase
+        x:Key="GitHubDefaultEaseInOut"
+        EasingMode="EaseInOut" 
+        PresentationOptions:Freeze="true" />
+    <QuinticEase
+        x:Key="GitHubDefaultEaseIn"
+        EasingMode="EaseIn"
+        PresentationOptions:Freeze="true" />
+    <QuinticEase
+        EasingMode="EaseOut"
+        x:Key="GitHubDefaultEaseOut" 
+        PresentationOptions:Freeze="true" />
+
+    <Style x:Key="VerticalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Rectangle
+                        Fill="Transparent"
+                        Height="{TemplateBinding Height}"
+                        Width="{TemplateBinding Width}"
+                       SnapsToDevicePixels="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="HorizontalScrollBarThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Rectangle 
+                        x:Name="Rect" 
+                        Width="{TemplateBinding Width}" 
+                        Margin="0"
+                        Opacity="0.25"
+                        VerticalAlignment="Stretch" 
+                        Fill="Black" 
+                        SnapsToDevicePixels="true" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" TargetName="Rect" Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="VerticalScrollBarThumb" TargetType="{x:Type Thumb}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Rectangle 
+                        x:Name="Rect" 
+                        Height="{TemplateBinding Height}" 
+                        Margin="0"
+                        Opacity="0.25"
+                        HorizontalAlignment="Stretch" 
+                        Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ScrollBar}}}"
+                        SnapsToDevicePixels="true" />
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" TargetName="Rect" Value="0.4" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="HorizontalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Focusable" Value="false" />
+        <Setter Property="IsTabStop" Value="false" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Rectangle Fill="Transparent" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"
+                       SnapsToDevicePixels="True" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="GitHubScrollBar" TargetType="ScrollBar">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
+        <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="MinWidth" Value="16" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <Grid x:Name="Bg" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <Border Margin="4,1,1,1">
+                            <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Margin="4,3,3,3">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}"
+                                  Style="{StaticResource VerticalScrollBarPageButton}" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}"
+                                  Style="{StaticResource VerticalScrollBarPageButton}" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource VerticalScrollBarThumb}" />
+                                </Track.Thumb>
+                            </Track>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ThicknessAnimation
+                                            Storyboard.TargetName="PART_Track" 
+                                            Storyboard.TargetProperty="Margin" 
+                                            To="0,3,3,3" 
+                                            FillBehavior="HoldEnd" 
+                                            Duration="0:0:0.2" 
+                                            EasingFunction="{StaticResource GitHubDefaultEaseInOut}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ThicknessAnimation
+                                            Storyboard.TargetName="PART_Track" 
+                                            Storyboard.TargetProperty="Margin" 
+                                            To="4,3,3,3" 
+                                            FillBehavior="HoldEnd" 
+                                            Duration="0:0:0.2" 
+                                            EasingFunction="{StaticResource GitHubDefaultEaseInOut}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="MinWidth" Value="0" />
+                <Setter Property="Height" Value="16" />
+                <Setter Property="MinHeight" Value="16" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+                            <Grid x:Name="Bg" Background="Transparent" SnapsToDevicePixels="true">
+                                <Border Margin="1,4,1,1">
+                                    <Track x:Name="PART_Track" IsEnabled="{TemplateBinding IsMouseOver}" Margin="2,4,2,2">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}"
+                                              Style="{StaticResource HorizontalScrollBarPageButton}" />
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}"
+                                              Style="{StaticResource HorizontalScrollBarPageButton}" />
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource HorizontalScrollBarThumb}" />
+                                        </Track.Thumb>
+                                    </Track>
+                                </Border>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ThicknessAnimation 
+                                                    Storyboard.TargetName="PART_Track" 
+                                                    Storyboard.TargetProperty="Margin" 
+                                                    To="2,0,2,2" 
+                                                    FillBehavior="HoldEnd" 
+                                                    Duration="0:0:0.2" 
+                                                    EasingFunction="{StaticResource GitHubDefaultEaseInOut}" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ThicknessAnimation
+                                                    Storyboard.TargetName="PART_Track" 
+                                                    Storyboard.TargetProperty="Margin" 
+                                                    To="2,4,2,2" 
+                                                    FillBehavior="HoldEnd" 
+                                                    Duration="0:0:0.2" 
+                                                    EasingFunction="{StaticResource GitHubDefaultEaseInOut}" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="ScrollViewerWithShadow" TargetType="{x:Type ScrollViewer}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Rectangle
+                            x:Name="Corner"
+                            HorizontalAlignment="Right"
+                            Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"
+                            Grid.Row="1"/>
+                        <ScrollContentPresenter
+                            x:Name="PART_ScrollContentPresenter"
+                            CanContentScroll="{TemplateBinding CanContentScroll}"
+                            CanHorizontallyScroll="False"
+                            CanVerticallyScroll="False"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            Content="{TemplateBinding Content}"
+                            Grid.Column="0"
+                            Margin="{TemplateBinding Padding}"
+                            Grid.Row="0"/>
+                        <ScrollBar
+                            x:Name="PART_VerticalScrollBar"
+                            AutomationProperties.AutomationId="VerticalScrollBar"
+                            Cursor="Arrow"
+                            HorizontalAlignment="Right"
+                            Maximum="{TemplateBinding ScrollableHeight}"
+                            Minimum="0"
+                            Grid.Row="0"
+                            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                            Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            ViewportSize="{TemplateBinding ViewportHeight}"/>
+                        <ScrollBar
+                            x:Name="PART_HorizontalScrollBar"
+                            AutomationProperties.AutomationId="HorizontalScrollBar"
+                            Cursor="Arrow"
+                            Grid.Column="0"
+                            Maximum="{TemplateBinding ScrollableWidth}"
+                            Minimum="0"
+                            Orientation="Horizontal"
+                            Grid.Row="1"
+                            Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+                            Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            ViewportSize="{TemplateBinding ViewportWidth}"/>
+
+                        <ui:HorizontalShadowDivider 
+                            x:Name="shadow"
+                            Grid.Row="0"
+                            Visibility="{TemplateBinding ContentVerticalOffset, Converter={ui:VerticalOffsetToVisibilityConverter}}" 
+                            Grid.ColumnSpan="1" />
+
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <!-- shoutout to De Morgan
+                             - when the mouse leave AND keyboard focus leaves, hide the scrollviewer
+                             - otherwise show the scrollviewer -->
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="False" />
+                                <Condition Property="IsKeyboardFocusWithin" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <MultiTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="PART_VerticalScrollBar"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0" To="1"
+                                            Duration="0:0:0.3"
+                                            EasingFunction="{StaticResource GitHubDefaultEaseInOut}" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="PART_HorizontalScrollBar"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="0" To="1"
+                                            Duration="0:0:0.3"
+                                            EasingFunction="{StaticResource GitHubDefaultEaseInOut}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.ExitActions>
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="PART_VerticalScrollBar"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="1"
+                                            To="0"
+                                            Duration="0:0:1"
+                                            EasingFunction="{StaticResource GitHubDefaultEaseInOut}" />
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="PART_HorizontalScrollBar"
+                                            Storyboard.TargetProperty="Opacity"
+                                            From="1"
+                                            To="0"
+                                            Duration="0:0:1"
+                                            EasingFunction="{StaticResource GitHubDefaultEaseInOut}" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                        </MultiTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ScrollBar" BasedOn="{StaticResource GitHubScrollBar}" />
+</ResourceDictionary>

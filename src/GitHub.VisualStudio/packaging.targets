@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="RemoveVSSDKAssemblies"
+          AfterTargets="GetVsixSourceItems">
+    <ItemGroup>
+      <SuppressPackaging Include="@(VSIXSourceItem)"
+                         Condition="
+                              $([System.String]::Copy('%(Filename)').Contains('Microsoft.')) or
+                              $([System.String]::Copy('%(Extension)').Contains('.dylib')) or
+                              $([System.String]::Copy('%(Extension)').Contains('.so')) or
+                              $([System.Text.RegularExpressions.Regex]::IsMatch('%(FullPath)', '.*\\libgit2\\.*\.pdb'))
+                             "/>
+      <VSIXSourceItem Remove="@(SuppressPackaging)" />
+    </ItemGroup>
+    <Message Importance="High" Text='Suppressed "@(SuppressPackaging)" from being included in VSIX.' />
+  </Target>
+
+
+  <!-- Update to have AllUsers="true" and Experimental="false" when $(IsExperimental)' == 'false' -->
+  <Target Name="MakeVsixManifestAllUsers" AfterTargets="DetokenizeVsixManifestFile" Condition=" '$(IsExperimental)' == 'false' ">
+    <Warning Text="NOTE: Tweaking '$(IntermediateVsixManifest)' to have AllUsers='true' and Experimental='false'" />
+    <XmlPoke XmlInputPath="$(IntermediateVsixManifest)" Query="/x:PackageManifest/x:Installation/@AllUsers" Value="true" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/developer/vsx-schema/2011' /&gt;" />
+    <XmlPoke XmlInputPath="$(IntermediateVsixManifest)" Query="/x:PackageManifest/x:Installation/@Experimental" Value="false" Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/developer/vsx-schema/2011' /&gt;" />
+  </Target>
+</Project>
